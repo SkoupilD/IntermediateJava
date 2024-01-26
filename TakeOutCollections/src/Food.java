@@ -8,6 +8,15 @@ public class Food implements PriceItem<Integer>{
         this.description = description;
         this.price = price;
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
     @Override
     public Integer getPrice(){
         return this.price;
