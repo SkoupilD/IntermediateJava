@@ -1,29 +1,26 @@
-### IntelliJ IDEA ###
-out/
-!**/src/main/**/out/
-!**/src/test/**/out/
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+*.ipr
 
-### Eclipse ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
-bin/
-!**/src/main/**/bin/
-!**/src/test/**/bin/
+# Maven
+target/
+*.log
 
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
+# Java
+*.class
 
-### VS Code ###
-.vscode/
-
-### Mac OS ###
+# macOS
 .DS_Store
+.AppleDouble
+.LSOverride
+Icon
+
+# Maven-specific files
+mvnw
+.mvn/
+
+# Logs
+log/
+*.log
