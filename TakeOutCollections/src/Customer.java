@@ -16,8 +16,7 @@ public class Customer{
     public int getMoney(){
         return this.money;
     }
-    public void setMoney(){
+    public void setMoney(int money){
         this.money = money;
     }
-
 }

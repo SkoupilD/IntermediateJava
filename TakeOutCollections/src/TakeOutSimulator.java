@@ -1,4 +1,3 @@
-import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class TakeOutSimulator {
@@ -18,39 +17,31 @@ public class TakeOutSimulator {
                 System.out.println(userInputPrompt);
                 int userIntInput = input.nextInt();
                 return intUserInputRetriever.produceOutputOnIntUserInput(userIntInput);
-            } catch (InputMismatchException e) {
-                input.next();
-                System.out.println("Input needs to be an integer. Please try again.");
             } catch (IllegalArgumentException e) {
-                System.out.println(e.getMessage());
+                input.next();
+                System.out.println("Input needs to be an int type. Try Again!");
             }
         }
     }
-    private boolean shouldSimulate() {
-        String userPrompt = "Enter 1 to CONTINUE simulation or 0 to EXIT program: ";
 
-        // Create an implementation of IntUserInputRetreiver using lambda function
+    public boolean shouldSimulate() {
+        String userPrompt = "Enter 1 to CONTINUE simulation or 0 to EXIT program: ";
         IntUserInputRetriever<Boolean> userInputRetriever = (selection) -> {
             if (selection == 1) {
-                // Check if the customer has enough money to buy the lowest cost food item
-                Food lowestCostFood = menu.getLowestCostFood();
-                return customer.getMoney() >= lowestCostFood.getPrice();
+                Food lowCostFood = menu.getLowestCostFood();
+                return customer.getMoney() >= lowCostFood.getPrice();
             } else if (selection == 0) {
-                return false; // Exit simulation
+                return false;
             } else {
                 throw new IllegalArgumentException("Invalid selection. Enter 1 to continue or 0 to exit.");
             }
         };
-        // Call getOutputOnIntUserInput and pass in userPrompt and the implementation of IntUserInputRetriever
         return getOutputOnIntInput(userPrompt, userInputRetriever);
     }
 
-    // Method to retrieve a user menu selection
-    private Food getMenuSelection() {
-        String userPrompt = "Today's Menu Options!\n" + menu.toString() + "\nChoose a menu item!: ";
-
-        // Create an implementation of IntUserInputRetreiver using lambda function
-        IntUserInputRetriever<Food> userInputRetriever = (selection) -> {
+    public Food getMenuSelection() {
+        String userPrompt = "Choose a menu item!: \n" + menu.toString();
+        IntUserInputRetriever<Food> intFoodSelection = (selection) -> {
             Food selectedFood = menu.getFood(selection);
             if (selectedFood != null) {
                 return selectedFood;
@@ -58,10 +49,62 @@ public class TakeOutSimulator {
                 throw new IllegalArgumentException("Invalid menu selection. Please choose a valid menu item.");
             }
         };
+        return getOutputOnIntInput(userPrompt, intFoodSelection);
+    }
 
-        // Call getOutputOnIntUserInput and pass in userPrompt and the implementation of IntUserInputRetriever
+    public boolean isStillOrderingFood() {
+        String userPrompt = "Enter 1 to CONTINUE shopping or 0 to CHECKOUT: ";
+        IntUserInputRetriever<Boolean> userInputRetriever = (selection) -> {
+            if (selection == 1) {
+                return true;
+            } else if (selection == 0) {
+                return false;
+            } else {
+                throw new IllegalArgumentException("Invalid selection. Enter 1 to continue or 0 to checkout.");
+            }
+        };
         return getOutputOnIntInput(userPrompt, userInputRetriever);
     }
 
+    public void checkoutCustomer(ShoppingBag<Food> shoppingBag) {
+        System.out.println("Processing payment...");
+        int remainingMoney = customer.getMoney() - shoppingBag.getTotalPrice();
+        customer.setMoney(remainingMoney);
+        System.out.println("Your remaining money: $" + remainingMoney);
+        System.out.println("Thank you and enjoy your food!");
+    }
 
+    public void takeOutPrompt() {
+        ShoppingBag<Food> shoppingBag = new ShoppingBag<>();
+        int customerMoneyLeft = customer.getMoney();
+
+        while (true) {
+            System.out.printf("You have $%d left to spend%n%n", customerMoneyLeft);
+            System.out.println("Today's Menu Options!\n" + menu.toString());
+
+            Food selectedFood = getMenuSelection();
+
+            if (customerMoneyLeft >= selectedFood.getPrice()) {
+                customerMoneyLeft -= selectedFood.getPrice();
+                shoppingBag.addItem(selectedFood);
+                System.out.println("Item added to your bag!\n");
+            } else {
+                System.out.println("Oops! Looks like you don't have enough for that. Choose another item or checkout.\n");
+            }
+
+            if (!isStillOrderingFood()) {
+                checkoutCustomer(shoppingBag);
+                break;
+            }
+        }
+    }
+
+    public void startTakeOutSimulator() {
+        System.out.println("Hello, welcome to my restaurant!\n");
+        System.out.printf("Welcome %s!%n%n", customer.getName());
+
+        while (shouldSimulate()) {
+            takeOutPrompt();
+        }
+    }
 }
