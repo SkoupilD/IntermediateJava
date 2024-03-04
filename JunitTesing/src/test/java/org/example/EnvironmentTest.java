@@ -50,7 +50,7 @@ public class EnvironmentTest {
         assertEquals(1, environment.getEntities().size());
     }
     @Test
-    public void addingAll() {
+    public void testCleanUp() {
         environment.addEntity(entity1);
         environment.addEntity(entity2);
         environment.addEntity(entity3);
@@ -58,5 +58,8 @@ public class EnvironmentTest {
         environment.addEntity(entity5);
         environment.addEntity(entity6);
         assertEquals(6, environment.getEntities().size());
+        environment.arrayCleanUp();
+        assertTrue(environment.getEntities().isEmpty());
+
     }
 }
