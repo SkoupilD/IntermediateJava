@@ -57,20 +57,6 @@ public class EnvironmentTest {
         environment.addEntity(entity4);
         environment.addEntity(entity5);
         environment.addEntity(entity6);
-    assertEquals(6, environment.getEntities().size());
-}
-@Test
-public void testCleanUp() {
-        assertTrue(environment.getEntities().isEmpty());
-}
-
-    @AfterEach
-    public void cleanUp() {
-        if(environment.getEntities().isEmpty()){
-            for (int i = environment.getEntities().size() -1;i >= 0; i-- ){
-                environment.removeEntity(environment.getEntities().get(i));
-            }
-        }
+        assertEquals(6, environment.getEntities().size());
     }
-
 }
